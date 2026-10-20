@@ -61,7 +61,7 @@ check('backend/Dockerfile exists', backendDockerfileExists, backendDockerfile);
 
 if (backendDockerfileExists) {
   const bContent = fs.readFileSync(backendDockerfile, 'utf8');
-  check('Uses Node.js 18 base image', /FROM\s+node:18/i.test(bContent));
+  check('Uses Node.js LTS base image (18/20/22)', /FROM\s+node:(?:18|20|22)/i.test(bContent));
   check('Sets working directory to /app', /WORKDIR\s+\/app/i.test(bContent));
   check('Copies package.json first for layer caching', /COPY\s+package\*\.json/i.test(bContent));
   check('Runs npm install inside container', /RUN\s+npm\s+install/i.test(bContent));

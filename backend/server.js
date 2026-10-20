@@ -4,6 +4,10 @@
 // Practical 9  – In-Memory Caching (node-cache)
 // Practical 10 – Async EventEmitter-based background processing
 // =========================================================================
+// Polyfill global crypto for Mongoose 9 / MongoDB 7 driver
+if (!globalThis.crypto) {
+  globalThis.crypto = require('crypto');
+}
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -13,8 +17,9 @@ require('dotenv').config();
 const app = express();
 
 // Connect to MongoDB using Mongoose (Practical 11: Containerized DNS resolution)
-// Uses Docker service name 'mongodb' when inside compose network or fallback
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://mongodb:27017/taskdb';
+// In Docker Compose, process.env.MONGO_URI is injected as 'mongodb://mongodb:27017/taskdb'
+// For local testing without Docker, it connects to 'mongodb://127.0.0.1:27017/taskdb'
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/taskdb';
 mongoose.connect(MONGO_URI)
   .then(() => console.log(`MongoDB connected successfully to: ${MONGO_URI}`))
   .catch((err) => console.error('MongoDB connection error:', err));

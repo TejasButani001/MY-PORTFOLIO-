@@ -1,10 +1,11 @@
 # =========================================================================
 # Practical 11: Containerization with Docker and Docker Compose
 # Backend Dockerfile for Node/Express RESTful API
+# Uses Node 22 Alpine for full Mongoose 9 / MongoDB 7 compatibility
 # =========================================================================
 
-# 1. Base image: Official Node.js 18 (LTS) Alpine for lightweight & secure image
-FROM node:18-alpine
+# 1. Base image: Official Node.js 22 LTS Alpine
+FROM node:22-alpine
 
 # 2. Set the working directory inside the container
 WORKDIR /app
