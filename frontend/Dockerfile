@@ -1,10 +1,11 @@
 # =========================================================================
 # Practical 11: Containerization with Docker and Docker Compose
-# Frontend Dockerfile for React (Vite) Application (Step 3)
+# Frontend Dockerfile for React (Vite 8) Application
+# Uses Node 22 Alpine (LTS) for Vite 8 / Rolldown compatibility (styleText API)
 # =========================================================================
 
 # Stage 1: Build the React application
-FROM node:18-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 

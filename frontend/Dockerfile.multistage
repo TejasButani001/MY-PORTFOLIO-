@@ -3,8 +3,8 @@
 # Drastically reduces final image size (~1GB Node -> ~25MB Nginx)
 # =========================================================================
 
-# --- Stage 1: Build Stage (Node.js SDK) ---
-FROM node:18-alpine AS builder
+# --- Stage 1: Build Stage (Node.js SDK 22 Alpine) ---
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 

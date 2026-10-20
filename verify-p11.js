@@ -86,7 +86,7 @@ check('frontend/Dockerfile exists', frontendDockerfileExists, frontendDockerfile
 
 if (frontendDockerfileExists) {
   const fContent = fs.readFileSync(frontendDockerfile, 'utf8');
-  check('Uses Node.js 18 base image', /FROM\s+node:18/i.test(fContent));
+  check('Uses Node.js LTS base image (18/20/22)', /FROM\s+node:(?:18|20|22)/i.test(fContent));
   check('Sets working directory to /app', /WORKDIR\s+\/app/i.test(fContent));
   check('Runs npm run build to compile production assets', /RUN\s+npm\s+run\s+build/i.test(fContent));
   check('Exposes port 5173', /EXPOSE\s+5173/i.test(fContent));
