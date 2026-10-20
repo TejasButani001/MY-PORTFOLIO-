@@ -1,0 +1,15 @@
+# Exclude local dependencies
+node_modules
+npm-debug.log
+
+# Exclude previous build artifacts
+dist
+
+# Exclude sensitive environment variables
+.env
+.env.local
+
+# Exclude version control and editor files
+.git
+.gitignore
+.vscode

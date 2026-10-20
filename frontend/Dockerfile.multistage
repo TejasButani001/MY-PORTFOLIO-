@@ -1,0 +1,32 @@
+# =========================================================================
+# Practical 11 - Supplementary Problem 2: Multi-Stage Production Build
+# Drastically reduces final image size (~1GB Node -> ~25MB Nginx)
+# =========================================================================
+
+# --- Stage 1: Build Stage (Node.js SDK) ---
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Install dependencies using layer cache
+COPY package*.json ./
+RUN npm install
+
+# Build the React production bundle
+COPY . .
+RUN npm run build
+
+# --- Stage 2: Production Serving Stage (Ultra-lightweight Nginx) ---
+FROM nginx:alpine
+
+# Copy built HTML/CSS/JS assets from Stage 1 builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom Nginx configuration listening on port 5173
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 5173
+EXPOSE 5173
+
+# Start Nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

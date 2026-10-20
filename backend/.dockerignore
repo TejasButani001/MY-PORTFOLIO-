@@ -1,0 +1,16 @@
+# Exclude dependencies (built fresh inside the container)
+node_modules
+npm-debug.log
+
+# Exclude sensitive environment secrets
+.env
+.env.local
+
+# Exclude version control metadata
+.git
+.gitignore
+
+# Exclude test and verification scripts from production image
+verify-*.js
+test-api.js
+P10_LAB_REPORT.md

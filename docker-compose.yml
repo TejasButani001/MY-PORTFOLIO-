@@ -1,0 +1,75 @@
+version: '3.8'
+
+# =========================================================================
+# CHAROTAR UNIVERSITY OF SCIENCE AND TECHNOLOGY
+# FACULTY OF TECHNOLOGY AND ENGINEERING - B.TECH (IT/CE/CSE/AIML)
+# ADVANCED WEB DEVELOPMENT FRAMEWORKS (ITUE301)
+# Practical 11: Containerization with Docker and Docker Compose
+# =========================================================================
+
+services:
+  # -----------------------------------------------------------------------
+  # Service 1: MongoDB Database
+  # -----------------------------------------------------------------------
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      # Supplementary Problem 3: Named volume to persist data across container restarts
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  # -----------------------------------------------------------------------
+  # Service 2: Node.js / Express Backend REST API
+  # -----------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      # Connects using Docker service name 'mongodb' across internal bridge network
+      - MONGO_URI=mongodb://mongodb:27017/taskdb
+      - JWT_SECRET=supersecret_jwt_key_practical7_2026
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # -----------------------------------------------------------------------
+  # Service 3: React Frontend (Vite)
+  # -----------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+# -------------------------------------------------------------------------
+# Supplementary Problem 3: Named Volume for Persistent Database Storage
+# -------------------------------------------------------------------------
+volumes:
+  mongo-data:
+    driver: local
+
+# -------------------------------------------------------------------------
+# Inter-container Bridge Network (app-network)
+# -------------------------------------------------------------------------
+networks:
+  app-network:
+    driver: bridge
