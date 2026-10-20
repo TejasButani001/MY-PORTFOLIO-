@@ -1,6 +1,6 @@
 # Task Management System — CI/CD Pipeline with GitHub Actions
 
-[![CI Pipeline](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/TejasButani001/MY-PORTFOLIO-/actions/workflows/ci.yml/badge.svg)](https://github.com/TejasButani001/MY-PORTFOLIO-/actions/workflows/ci.yml)
 [![Node.js Version](https://img.shields.io/badge/node-18%20%7C%2020%20%7C%2022-brightgreen.svg)](https://nodejs.org/)
 [![Testing Framework](https://img.shields.io/badge/tested%20with-Jest%20%26%20Supertest-red.svg)](https://jestjs.io/)
 [![Linter](https://img.shields.io/badge/code%20style-ESLint-purple.svg)](https://eslint.org/)
