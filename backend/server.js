@@ -3,6 +3,8 @@
 // Practical 7  – Auth & Middleware Pipeline
 // Practical 9  – In-Memory Caching (node-cache)
 // Practical 10 – Async EventEmitter-based background processing
+// Practical 11 – Docker Containerization
+// Practical 12 – CI/CD Pipeline with GitHub Actions & Automated Testing
 // =========================================================================
 // Polyfill global crypto for Mongoose 9 / MongoDB 7 driver
 if (!globalThis.crypto) {
@@ -18,11 +20,13 @@ const app = express();
 
 // Connect to MongoDB using Mongoose (Practical 11: Containerized DNS resolution)
 // In Docker Compose, process.env.MONGO_URI is injected as 'mongodb://mongodb:27017/taskdb'
-// For local testing without Docker, it connects to 'mongodb://127.0.0.1:27017/taskdb'
+// In CI testing environment (NODE_ENV=test), skip MongoDB connection unless specified
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/taskdb';
-mongoose.connect(MONGO_URI)
-  .then(() => console.log(`MongoDB connected successfully to: ${MONGO_URI}`))
-  .catch((err) => console.error('MongoDB connection error:', err));
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(MONGO_URI)
+    .then(() => console.log(`MongoDB connected successfully to: ${MONGO_URI}`))
+    .catch((err) => console.error('MongoDB connection error:', err));
+}
 
 // Support requiring `.jsx` files on backend Node environment
 require.extensions['.jsx'] = require.extensions['.js'];
@@ -54,6 +58,17 @@ app.use(logger);
 // 4. Content-Type Header Validation middleware (for POST & PUT)
 app.use(validateContent);
 
+// ── Practical 12: Health Check Smoke Test Endpoint ───────────────────────
+// Used by CI/CD pipeline to verify server readiness and test second endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'UP',
+    service: 'Task Management API',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // 5. Authentication API Routes (Public: /auth/register, /auth/login; Protected: /auth/me)
 app.use('/auth', authRoutes);
 
@@ -68,7 +83,7 @@ app.get('/trigger-error', (req, res, next) => {
 
 // ── Practical 9 (Supplementary): Cache stats debug endpoint ──────────────
 // GET /cache-stats → returns hit count, miss count, and currently cached keys.
-// No auth required so it's easy to test in Postman.
+// No auth required so it's easy to test in Postman or automated test suites.
 app.get('/cache-stats', (req, res) => {
   const stats = cache.getStats();
   res.json({
@@ -85,7 +100,6 @@ app.get('/cache-stats', (req, res) => {
 
 // ── Practical 10: Event Log & Test Endpoints ──────────────────────────────
 // GET /events/log → returns recent event emissions with exact timestamps
-// demonstrating that the API responded before the 2-second background notification completed.
 app.get('/events/log', (req, res) => {
   const logs = getEventLogs();
   res.json({
@@ -106,7 +120,6 @@ app.post('/events/test-error', (req, res) => {
   const errorMessage = req.body?.message || 'Deliberate test error for Practical 10 error listener';
   console.log(`\n[API] Emitting deliberate error event for testing: "${errorMessage}"`);
 
-  // Emit directly or emit task-created with invalid data to trigger catch block
   taskEvents.emit('error', new Error(errorMessage));
 
   res.status(200).json({
@@ -124,8 +137,13 @@ app.use((req, res) => {
 // 9. Global Error Handler middleware
 app.use(errorHandler);
 
-// Start the Express server on port 5000
+// Start the Express server on port 5000 only when executed directly
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export app for Jest and Supertest automated CI pipeline testing
+module.exports = app;

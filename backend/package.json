@@ -1,0 +1,42 @@
+{
+  "name": "task-manager-backend",
+  "version": "1.0.0",
+  "description": "Task Management REST API backend with Express middleware pipeline",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "jest ../tests/tasks.test.js --runInBand",
+    "test:fail": "jest ../tests/broken.test.js --runInBand",
+    "verify:p10": "node verify-p10.js",
+    "verify:p9-p10": "node verify-p9-p10.js"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "rest-api",
+    "crud",
+    "middleware",
+    "ci-cd",
+    "jest"
+  ],
+  "author": "Student",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.3",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 10000
+  }
+}

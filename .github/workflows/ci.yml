@@ -1,0 +1,63 @@
+# =========================================================================
+# CHAROTAR UNIVERSITY OF SCIENCE AND TECHNOLOGY (CHARUSAT)
+# FACULTY OF TECHNOLOGY AND ENGINEERING - B.TECH (IT/CE/CSE/AIML)
+# ADVANCED WEB DEVELOPMENT FRAMEWORKS (ITUE301)
+# Practical 12: CI/CD Pipeline with GitHub Actions
+# =========================================================================
+
+name: CI Pipeline
+
+# Trigger Configuration:
+# - Runs on every push to main or master
+# - Runs on pull requests targeting main or master (Supplementary Problem 2)
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  # -----------------------------------------------------------------------
+  # Job 1 (Supplementary Problem 1): Linter Job (ESLint)
+  # Runs before the test job to ensure code cleanliness & syntax validity
+  # -----------------------------------------------------------------------
+  lint:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint Linter
+        run: npm run lint
+
+  # -----------------------------------------------------------------------
+  # Job 2: Build & Automated Tests (Jest + Supertest)
+  # Defined as required in Practical 12 Step 3. Runs after lint job passes.
+  # -----------------------------------------------------------------------
+  build-and-test:
+    name: Build & Automated Tests
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run automated tests
+        run: npm test

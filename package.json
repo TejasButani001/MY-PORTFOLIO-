@@ -1,0 +1,45 @@
+{
+  "name": "student-portfolio",
+  "version": "1.0.0",
+  "description": "Task Management System with GitHub Actions CI/CD Pipeline - Practical 12",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "jest tests/tasks.test.js --runInBand",
+    "test:all": "jest --runInBand",
+    "test:fail": "jest tests/broken.test.js --runInBand",
+    "lint": "eslint backend/ tests/ --ext .js,.jsx",
+    "lint:fix": "eslint backend/ tests/ --ext .js,.jsx --fix",
+    "verify:p12": "node verify-p12.js",
+    "verify:p11": "node verify-p11.js"
+  },
+  "keywords": [
+    "ci-cd",
+    "github-actions",
+    "jest",
+    "supertest",
+    "express",
+    "node",
+    "automation"
+  ],
+  "author": "Student",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.3",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 10000
+  }
+}
